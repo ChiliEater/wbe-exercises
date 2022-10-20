@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "create-config": "0.3.1",
     "eslint": "^8.25.0"
   }
 }
