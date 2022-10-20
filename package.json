@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "create-config": "0.3.1",
-    "eslint": "^8.25.0"
+    "eslint": "^8.25.0",
+    "jasmine": "^4.4.0"
   }
 }
