@@ -12,7 +12,8 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/WBE7/code/csv2json.js",
-            "args": ["WBE7/code/csv/population.csv", "WBE7/code/csv/output.json"]
+            "args": ["WBE7/code/csv/population.csv", "WBE7/code/csv/output.json"],
+            "console": "integratedTerminal"
         }
     ]
 }
