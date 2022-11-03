@@ -1,9 +1,9 @@
-import * as app from "express"
+import express from "express"
 /**
  *  Webservice mit Express
  *  WBE-Praktikum
  */
-
+const app = express()
 
 //  Fehlerobjekt anlegen
 //
