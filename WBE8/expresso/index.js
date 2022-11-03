@@ -1,15 +1,14 @@
+import * as app from "express"
 /**
  *  Webservice mit Express
  *  WBE-Praktikum
  */
 
-var express = require('express')
-var app = express()
 
 //  Fehlerobjekt anlegen
 //
 function error(status, msg) {
-  var err = new Error(msg)
+  let err = new Error(msg)
   err.status = status
   return err
 }
@@ -18,7 +17,7 @@ function error(status, msg) {
 //  https://stackoverflow.com/questions/6860853/generate-random-string-for-div-id#6860916
 //
 function guidGenerator() {
-  var S4 = function() {
+  let S4 = function() {
     return (((1+Math.random())*0x10000)|0).toString(16).substring(1)
   }
   return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4())
@@ -27,7 +26,7 @@ function guidGenerator() {
 //  API-Key überprüfen
 // 
 app.use('/api', function(req, res, next){
-  var key = req.query['api-key']
+  let key = req.query['api-key']
   
   // Key fehlt
   if (!key) { 
@@ -46,16 +45,16 @@ app.use('/api', function(req, res, next){
 app.use(express.json())
 
 //  gültige API-Keys
-var apiKeys = ['wbeweb']
+let apiKeys = ['wbeweb']
 
 //  unsere tolle in-memory Datenbank :)
-var data = {1234567890: {demodata: "wbe is an inspiring challenge"}}
+let data = {1234567890: {demodata: "wbe is an inspiring challenge"}}
 
 //  GET-Request bearbeiten
 //
 app.get('/api/data/:id', function(req, res, next){
-  var id = req.params.id
-  var result = data[id]
+  let id = req.params.id
+  let result = data[id]
 
   if (result) res.send(result)
   else next()
