@@ -1,0 +1,139 @@
+:root {
+    --cell: 200px;
+    --pad: 20px;
+    --dim: calc(var(--cell) + 2 * var(--pad));
+    --hoz: calc(2 * var(--dim) + 50px);
+    --ver: 1;
+    --dia: 1;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: grid;
+    grid-auto-flow: row;
+    align-items: center;
+    justify-items: center;
+}
+
+h1 {
+    font-family: sans-serif;
+    font-size: 5em;
+    margin: 0;
+    align-self: end;
+}
+
+h2 {
+    font-family: sans-serif;
+    font-size: 3em;
+    color: red;
+    align-self: start;
+    cursor: pointer;
+}
+
+h2:hover {
+    text-decoration: underline solid red 2px;
+}
+
+#board {
+    display: grid;
+    grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+    justify-items: center;
+    align-items: center;
+    border: black 1px solid;
+    grid-row: 2 / 3;
+    grid-column: 1 / 2;
+}
+
+#board > div {
+    display: grid;
+    padding: var(--pad);
+    border: black 1px solid;
+    cursor: pointer;
+}
+
+#board img {
+    width: var(--cell);
+    grid-row: 1 / 2;
+    grid-column: 1 / 2;
+    opacity: 0;
+    transition: opacity .2s;
+}
+
+.hover {
+    opacity: 0.3 !important;
+}
+
+.set {
+    opacity: 1 !important;
+}
+
+#lines {
+    grid-row: 2 / 3;
+    grid-column: 1 / 2;
+    position: relative;
+    bottom: 25px;
+    right: 25px;
+}
+
+#lines > div {
+    width: 50px;
+    height: 50px;
+    background-color: green;
+    border-radius: 20px;
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path .3s;
+    position: absolute;
+}
+
+.winner {
+    clip-path: inset(0 0 0 0) !important;
+}
+
+#hoz-0 {
+    width: var(--hoz) !important;
+    bottom: calc(var(--dim) - 50px);
+    right: calc(var(--dim) - 2 * var(--dim) - 50px);
+}
+
+#hoz-1 {
+    width: var(--hoz) !important;
+    right: calc(var(--dim) - 2 * var(--dim) - 50px);
+}
+
+#hoz-2 {
+    width: var(--hoz) !important;
+    top: calc(var(--dim));
+    right: calc(var(--dim) - 2 * var(--dim) - 50px);
+}
+
+
+#ver-0 {
+    height: var(--hoz) !important;
+    bottom: calc(var(--dim) - 2 * var(--dim) - 50px);
+    left: calc(var(--dim) - 2 * var(--dim));
+}
+
+#ver-1 {
+    height: var(--hoz) !important;
+    bottom: calc(var(--dim) - 2 * var(--dim) - 50px);
+}
+
+#ver-2 {
+    height: var(--hoz) !important;
+    bottom: calc(var(--dim) - 2 * var(--dim) - 50px);
+    right: calc(var(--dim) - 2 * var(--dim) - 50px);
+}
+
+#dia-0 {
+    width: calc(var(--hoz) + var(--cell)) !important;
+    right: calc(var(--dim) - 2 * var(--dim) - var(--cell) + 50px);
+    rotate: 45deg;
+}
+
+#dia-1 {
+    width: calc(var(--hoz) + var(--cell)) !important;
+    right: calc(var(--dim) - 2 * var(--dim) - var(--cell) + 50px);
+    rotate: 315deg;
+}
