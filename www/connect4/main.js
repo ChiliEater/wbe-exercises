@@ -64,3 +64,7 @@ function disablePreview() {
         cell.removeEventListener("pointerdown", cell.click)
     })
 }
+
+export function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}

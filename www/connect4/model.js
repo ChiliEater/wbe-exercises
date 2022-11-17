@@ -62,7 +62,7 @@ class Puck {
 export let turn = 0
 let board
 
-export function reset() {
+export async function reset() {
     board = Array(main.config.rows)
     for (let i = 0; i < board.length; i++) {
         board[i] = Array(main.config.columns)
@@ -73,6 +73,7 @@ export function reset() {
     main.setCurrentPuck(new Puck(getColor(), 0, 0))
     board[0][0] = main.currentPuck
     console.log(board)
+    await main.sleep(200)
     board[0][0].show()
 }
 
@@ -80,7 +81,7 @@ export function reset() {
  * Inserts the current puck at the given column and prepares the next turn
  * @param {Number} column The column
  */
-export function insertAt(column) {
+export async function insertAt(column) {
     let row = findFreeRow(column)
     let puck = board[0][0]
     board[row][column] = puck
@@ -91,6 +92,7 @@ export function insertAt(column) {
     }
     turn++
     main.setCurrentPuck(new Puck(getColor(), 0, 0))
+    await main.sleep(200)
     board[0][0] = main.currentPuck
     main.currentPuck.show()
 
