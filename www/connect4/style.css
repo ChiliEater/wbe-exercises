@@ -1,5 +1,5 @@
 :root {
-    --cell: 13vh;
+    --cell: 100px;
     --rows: 7;
     --columns: 7;
     --puck-pad: 20px;
@@ -45,6 +45,9 @@ body {
 
 #insert-row {
     grid-column: 1 / calc(var(--columns) + 1);
+
+    display: grid;
+    grid-auto-flow: column;
 }
 
 #puck-row {
@@ -76,8 +79,14 @@ body {
     border-radius: 50%; 
 
     position: absolute;
+    z-index: -1;
 
-    transition: margin 0.5s;
+    transition: margin 0.2s, opacity 0.2s;
+    opacity: 1;
+}
+
+.disabled {
+    opacity: 0;
 }
 
 .blue {
