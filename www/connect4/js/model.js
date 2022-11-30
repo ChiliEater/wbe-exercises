@@ -30,6 +30,34 @@ class Chip {
         this.#column = column
     }
 
+    /**
+     * Checks if this chip is equal to the given chip
+     * @param {Chip} chip The chip
+     * @returns Equality of to chips
+     */
+    equals(chip) {
+        if (!chip) {
+            return false
+        }
+        return (
+            this.color === chip.color &&
+            this.column === chip.column &&
+            this.row === chip.row
+        )
+    }
+
+    /**
+     * Checks if the given chip is on the same team
+     * @param {Chip} chip The chip
+     * @returns If both chips are on the same team
+     */
+    sameTeam(chip) {
+        if (!chip) {
+            return false
+        }
+        return this.color === chip.color
+    }
+
     get color(){
         return this.#color
     }
@@ -50,6 +78,8 @@ export let turn = 0
  */
 let board
 
+let won = false
+
 /**
  * Resets the board to a neutral state
  */
@@ -60,6 +90,8 @@ export async function reset() {
     }
 
     turn = 0
+    won = false
+    renderer.unannounceWinner()
     renderer.draw(Array.from(board))
 }
 
@@ -70,18 +102,22 @@ export async function reset() {
 export async function insertAt(column) {
     let row = findFreeRow(column)
 
-    if (row >= main.config.rows || row < 0) {
+    if (row >= main.config.rows || row < 0 || won) {
         return
     }
 
     let chip = new Chip(getColor(), row, column)
     board[row][column] = chip
 
-    if (checkWinner()) {
-        return
-    }
     turn++
     renderer.draw(Array.from(board))
+
+    if (checkWinner(chip)) {
+        won = true
+        turn++
+        renderer.draw(Array.from(board))
+        renderer.announceWinner(chip.color)
+    }
 }
 
 /**
@@ -89,7 +125,7 @@ export async function insertAt(column) {
  * @returns A color
  */
 export function getColor() {
-    return turn % 2 == 0 ? "red" : "blue"
+    return turn % 2 == 0 ? main.config.red : main.config.blue
 }
 
 /**
@@ -106,6 +142,57 @@ function findFreeRow(column) {
     return -1
 }
 
-function checkWinner() {
+function checkWinner(chip) {
+    let winner = false
+
+    for (let y = 0; y < board.length; y++) {
+        const row = board[y];
+        for (let x = 0; x < row.length; x++) {
+            const slot = row[x];
+            if (chip.sameTeam(slot)) {
+                winner = (
+                    checkDirection(chip, y, x,  1,  0) ||
+                    checkDirection(chip, y, x, -1,  0) ||
+                    checkDirection(chip, y, x,  0,  1) ||
+                    checkDirection(chip, y, x,  0, -1) ||
+                    checkDirection(chip, y, x,  1,  1) ||
+                    checkDirection(chip, y, x, -1, -1) ||
+                    checkDirection(chip, y, x, -1,  1) ||
+                    checkDirection(chip, y, x,  1, -1)
+                )
+                if (winner) {
+                    return winner
+                }
+            }
+        }
+    }
     return false
+}
+
+/**
+ * Checks if the a color has won in the given direction from the specified starting point
+ * @param {Chip} check The chip to compare with
+ * @param {number} row Row
+ * @param {number} column Column
+ * @param {number} rowDelta Row direction
+ * @param {number} columnDelta Column direction
+ * @returns If the color has won in this direction
+ */
+function checkDirection(check, row, column, rowDelta, columnDelta) {
+    const chip = check
+    let match = false
+    let matches = 0
+
+    while (row < main.config.rows && row >= 0 && column < main.config.columns && column >= 0) {
+        let test = board[row][column]
+        if (!chip.sameTeam(test) && match) {
+            break;
+        } else if (chip.sameTeam(test)) {
+            match = true
+            matches++
+        }
+        row += rowDelta
+        column += columnDelta
+    }
+    return matches === 4
 }

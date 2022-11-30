@@ -35,6 +35,7 @@ body {
     width: var(--board-width);
     height: var(--board-height);
     border: 2px solid white;
+    transition: border-color .25s;
     border-top: none;
     border-right: none;
     display: grid;
@@ -44,6 +45,7 @@ body {
 #board > div:not(#free) {
     border-right: 2px solid white;
     z-index: 1;
+    transition: border-color .25s;
 }
 
 #free {

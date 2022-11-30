@@ -3,14 +3,24 @@
     width: calc(var(--cell-size) - var(--base-margin) * 2);
     height: calc(var(--cell-size) - var(--base-margin) * 2);
     position: absolute;
+    background-color: var(--bg);
+    transition: background-color .25s
 }
 
 .red {
-    background-color: #ef5350;
+    background-color: #ef5350 !important;
+}
+
+.border-red {
+    border-color: #ef5350 !important;
 }
 
 .blue {
-    background-color: #007acc;
+    background-color: #007acc !important;
+}
+
+.border-blue {
+    border-color: #007acc !important;
 }
 
 .x-offset-0 {
