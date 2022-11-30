@@ -1,6 +1,10 @@
+"use strict"
 import * as main from "./main.js"
+import {getColor} from "./model.js"
 
 const PLACEMENT_ELEM = document.querySelector("#free")
+
+const TURN_INDICATOR = document.querySelector("#turn-indicator")
 
 /**
  * Draws the current board based on the given array
@@ -17,6 +21,8 @@ export function draw(board) {
                 cell.color
             )
             PLACEMENT_ELEM.appendChild(chip)
+
+            TURN_INDICATOR.classList.replace(cell.color, getColor())
         }
     }))
 }

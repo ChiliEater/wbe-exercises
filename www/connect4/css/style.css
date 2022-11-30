@@ -43,6 +43,7 @@ body {
 
 #board > div:not(#free) {
     border-right: 2px solid white;
+    z-index: 1;
 }
 
 #free {
@@ -51,3 +52,27 @@ body {
     height: var(--board-height);
 }
 
+#button-container {
+    display: grid;
+    justify-content: center;
+    align-self: start;
+}
+
+#button-container > button {
+    background-color: #0e639c;
+    border: none;
+    width: fit-content;
+    padding: 10px;
+    font-size: 1.2em;
+}
+
+#button-container > button:hover {
+    background-color: rgb(17, 119, 187)
+}
+
+#turn-indicator {
+    width: var(--board-width);
+    height: 30px;
+    transition: background-color .5s;
+    place-self: start;
+}

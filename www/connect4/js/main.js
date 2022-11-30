@@ -1,4 +1,6 @@
-
+"use strict"
+import * as model from "./model.js"
+import * as events from "./events.js"
 
 export const config = {
     rows: 6,
@@ -9,3 +11,8 @@ export const config = {
     x_offset: "x-offset-",
     y_offset: "y-offset-",
 }
+
+window.addEventListener("load", () => {
+    model.reset()
+    events.setup()
+})

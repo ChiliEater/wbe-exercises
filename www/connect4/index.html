@@ -11,7 +11,6 @@
     <h1>Connect 4</h1>
     <div id="board">
         <div id="free">
-            <div class="blue x-offset-0"></div>
         </div>
         <div></div>
         <div></div>
@@ -21,10 +20,17 @@
         <div></div>
         <div></div>
     </div>
+    <div id="turn-indicator" class="red"></div>
+    <div id="button-container">
+        <button>
+            Reset
+        </button>
+    </div>
 
-    <script src="js/main.js" module="true"></script>
-    <script src="js/model.js" module="true"></script>
-    <script src="js/renderer.js" module="true"></script>
+    <script src="js/main.js" type="module"></script>
+    <script src="js/model.js" type="module"></script>
+    <script src="js/renderer.js" type="module"></script>
+    <script src="js/events.js" type="module"></script>
 </body>
 
 </html>

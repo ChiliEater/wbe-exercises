@@ -2,6 +2,7 @@
     border-radius: 50%;
     width: calc(var(--cell-size) - var(--base-margin) * 2);
     height: calc(var(--cell-size) - var(--base-margin) * 2);
+    position: absolute;
 }
 
 .red {

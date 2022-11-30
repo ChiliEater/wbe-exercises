@@ -1,5 +1,4 @@
 "use strict"
-import createPathUtils from "create-config/dist/lib/createPathUtils.js"
 import * as main from "./main.js"
 import * as renderer from "./renderer.js"
 
@@ -45,8 +44,15 @@ class Chip {
 }
 
 export let turn = 0
+
+/**
+ * @type {Array}
+ */
 let board
 
+/**
+ * Resets the board to a neutral state
+ */
 export async function reset() {
     board = Array(main.config.rows)
     for (let i = 0; i < board.length; i++) {
@@ -54,7 +60,7 @@ export async function reset() {
     }
 
     turn = 0
-    renderer.draw(board)
+    renderer.draw(Array.from(board))
 }
 
 /**
@@ -63,6 +69,11 @@ export async function reset() {
  */
 export async function insertAt(column) {
     let row = findFreeRow(column)
+
+    if (row >= main.config.rows || row < 0) {
+        return
+    }
+
     let chip = new Chip(getColor(), row, column)
     board[row][column] = chip
 
@@ -70,14 +81,14 @@ export async function insertAt(column) {
         return
     }
     turn++
-    renderer.draw()
+    renderer.draw(Array.from(board))
 }
 
 /**
  * Returns the correct color based on the current turn
  * @returns A color
  */
-function getColor() {
+export function getColor() {
     return turn % 2 == 0 ? "red" : "blue"
 }
 
@@ -92,6 +103,7 @@ function findFreeRow(column) {
             return i
         }
     }
+    return -1
 }
 
 function checkWinner() {
