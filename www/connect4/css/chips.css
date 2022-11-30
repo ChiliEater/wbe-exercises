@@ -1,0 +1,65 @@
+#free > *{
+    border-radius: 50%;
+    width: calc(var(--cell-size) - var(--base-margin) * 2);
+    height: calc(var(--cell-size) - var(--base-margin) * 2);
+}
+
+.red {
+    background-color: #ef5350;
+}
+
+.blue {
+    background-color: #007acc;
+}
+
+.x-offset-0 {
+    margin-left: calc(var(--base-margin) + var(--cell-size) * 0);
+}
+
+.x-offset-1 {
+    margin-left: calc(var(--base-margin) + var(--cell-size) * 1);
+}
+
+.x-offset-2 {
+    margin-left: calc(var(--base-margin) + var(--cell-size) * 2);
+}
+
+.x-offset-3 {
+    margin-left: calc(var(--base-margin) + var(--cell-size) * 3);
+}
+
+.x-offset-4 {
+    margin-left: calc(var(--base-margin) + var(--cell-size) * 4);
+}
+
+.x-offset-5 {
+    margin-left: calc(var(--base-margin) + var(--cell-size) * 5);
+}
+
+.x-offset-6 {
+    margin-left: calc(var(--base-margin) + var(--cell-size) * 6);
+}
+
+.y-offset-0 {
+    margin-top: calc(var(--base-margin) + var(--cell-size) * 0);
+}
+
+.y-offset-1 {
+    margin-top: calc(var(--base-margin) + var(--cell-size) * 1);
+}
+
+.y-offset-2 {
+    margin-top: calc(var(--base-margin) + var(--cell-size) * 2);
+}
+
+.y-offset-3 {
+    margin-top: calc(var(--base-margin) + var(--cell-size) * 3);
+}
+
+.y-offset-4 {
+    margin-top: calc(var(--base-margin) + var(--cell-size) * 4);
+}
+
+.y-offset-5 {
+    margin-top: calc(var(--base-margin) + var(--cell-size) * 5);
+}

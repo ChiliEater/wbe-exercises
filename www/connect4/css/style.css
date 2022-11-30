@@ -1,0 +1,53 @@
+@import url("chips.css");
+
+:root {
+    --bg: #1e1e1e;
+    --cell-size: 140px;
+    --board-width: calc(var(--cell-size) * 7);
+    --board-height: calc(var(--cell-size) * 6);
+    --base-margin: 20px;
+}
+
+* {
+    font-family: sans-serif;
+    color: white;
+}
+
+body > h1 {
+    text-align: center;
+    font-size: 3em;
+    margin: 0;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+    box-sizing: border-box;
+    background-color: var(--bg);
+    display: grid;
+    align-items: center;
+    justify-content: center;
+}
+
+#board {
+    width: var(--board-width);
+    height: var(--board-height);
+    border: 2px solid white;
+    border-top: none;
+    border-right: none;
+    display: grid;
+    grid-auto-flow: column;
+}
+
+#board > div:not(#free) {
+    border-right: 2px solid white;
+}
+
+#free {
+    position: absolute;
+    width: var(--board-width);
+    height: var(--board-height);
+}
+
