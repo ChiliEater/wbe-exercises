@@ -1,11 +1,7 @@
 "use strict"
 import * as model from "./model.js"
 
-/**
- * The element containing the visual chips
- */
 const COLUMNS = document.querySelectorAll("#board > div:not(#free")
-
 const RESET_BTN = document.querySelector("#button-container > button")
 
 /**

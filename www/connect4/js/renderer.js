@@ -29,6 +29,10 @@ export function draw(board) {
     TURN_INDICATOR.classList.add(getColor())
 }
 
+/**
+ * Displays the specified winner on screen
+ * @param {string} color The winning color
+ */
 export function announceWinner(color) {
     let elements = Array.from(COLUMNS)
     elements.push(BOARD)
@@ -37,6 +41,9 @@ export function announceWinner(color) {
     })
 }
 
+/**
+ * Removes the winner announcement from the screen
+ */
 export function unannounceWinner() {
     let elements = Array.from(COLUMNS)
     elements.push(BOARD)

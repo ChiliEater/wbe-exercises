@@ -2,6 +2,9 @@
 import * as main from "./main.js"
 import * as renderer from "./renderer.js"
 
+/**
+ * This class represents all relevant information that encompasses a chip in the board
+ */
 class Chip {
 
     /**
@@ -71,6 +74,9 @@ class Chip {
     }
 }
 
+/**
+ * The current turn
+ */
 export let turn = 0
 
 /**
@@ -78,6 +84,9 @@ export let turn = 0
  */
 let board
 
+/**
+ * The current win state
+ */
 let won = false
 
 /**
@@ -142,6 +151,11 @@ function findFreeRow(column) {
     return -1
 }
 
+/**
+ * Takes a chip and checks the board for win conditions
+ * @param {Chip} chip The chip to compare to
+ * @returns Whether the player of the given chip won
+ */
 function checkWinner(chip) {
     let winner = false
 
