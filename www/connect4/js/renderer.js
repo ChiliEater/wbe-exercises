@@ -14,6 +14,17 @@ const BORDER_CLASS = "border-"
  */
 export function draw(board) {
     PLACEMENT_ELEM.innerHTML = ""
+    ;[].concat(...board).filter(slot => !!slot).forEach((cell) => {
+        let chip = document.createElement("DIV")
+        PLACEMENT_ELEM.appendChild(chip)
+        chip.classList.add(
+            main.config.x_offset + cell.column,
+            main.config.y_offset + cell.row,
+            cell.color
+        )
+    })
+
+    /*
     board.forEach((row) => row.forEach((cell) => {
         if (!!cell) {
             let chip = document.createElement("DIV")
@@ -25,6 +36,7 @@ export function draw(board) {
             )
         }
     }))
+    */
     TURN_INDICATOR.className = ""
     TURN_INDICATOR.classList.add(getColor())
 }
