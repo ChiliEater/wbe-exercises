@@ -116,6 +116,7 @@ export class Game {
         this.#undoStack = []
         this.#renderer.unannounceWinner()
         this.#renderer.draw(this.#board.board, this.getColor())
+        console.log(JSON.stringify(this))
     }
 
     /**
@@ -169,11 +170,27 @@ export class Game {
         }
     }
 
+    save() {
+        // TODO: Check for local storage availability
+        window.localStorage.game = JSON.stringify(this)
+    }
+
+    load() {
+        let stored = window.localStorage.game
+        if (!!stored) {
+            this.fromObject(JSON.parse(stored))
+        }
+    }
+
+    clear() {
+        window.localStorage.removeItem("game")
+    }
+
     toJSON() {
         return {
             turn: this.#turn,
             won: this.#won,
-            board: this.#board.freeze(),
+            board: this.#board,
             undoStack: this.#undoStack
         }
     }
@@ -181,8 +198,10 @@ export class Game {
     fromObject(obj) {
         this.#turn = obj.turn
         this.#won = obj.won
+
         let builder = new BoardBuilder()
-        this.#board = builder.fromObject(obj)
+        this.#board = builder.fromObject(obj.board)
         this.#undoStack = obj.undoStack.map(state => builder.fromObject(state))
+        this.#renderer.draw(this.#board.board, this.getColor())
     }
 }

@@ -67,7 +67,7 @@ class Board {
     get board() {
         let newBoard = []
         this.#board.forEach(row => {
-            newBoard.push(row.map(chip => chip.clone()))
+            newBoard.push(row.map(chip => !chip ? null : chip.clone()))
         })
         return newBoard
     }
@@ -166,6 +166,7 @@ class Board {
             let newChip = new Chip().fromObject(chip)
             newBoard[newChip.row][newChip.column] = newChip
         })
+        this.#board = newBoard
         return this
     }
 }

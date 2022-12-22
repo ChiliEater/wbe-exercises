@@ -33,28 +33,16 @@ function setupBoardEvents() {
 }
 
 function setupButtonEvents() {
-    RESET_BTN.addEventListener("pointerup", (event) => {
+    createPointerupEvent(RESET_BTN, model.reset)
+    createPointerupEvent(UNDO_BTN, model.undo)
+    createPointerupEvent(SAVE_BTN, model.save)
+    createPointerupEvent(LOAD_BTN, model.load)
+    createPointerupEvent(CLEAR_BTN, model.clear)
+}
+
+function createPointerupEvent(element, callback) {
+    element.addEventListener("pointerup", event => {
         event.preventDefault()
-        model.reset()
-    })
-
-    UNDO_BTN.addEventListener("pointerup", (event) => {
-        event.preventDefault()
-        model.undo()
-    })
-
-    SAVE_BTN.addEventListener("pointerup", (event) => {
-        event.preventDefault()
-
-    })
-
-    LOAD_BTN.addEventListener("pointerup", (event) => {
-        event.preventDefault()
-
-    })
-
-    CLEAR_BTN.addEventListener("pointerup", (event) => {
-        event.preventDefault()
-
+        callback.call(model)
     })
 }
