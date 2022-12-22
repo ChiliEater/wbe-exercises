@@ -2,6 +2,7 @@
 
 :root {
     --bg: #1e1e1e;
+    --dangerous: #ef5350;
     --cell-size: 100px;
     --board-width: calc(var(--cell-size) * 7);
     --board-height: calc(var(--cell-size) * 6);
@@ -54,10 +55,15 @@ body {
     height: var(--board-height);
 }
 
+#board > div:hover {
+    cursor: pointer;
+}
+
 #button-container {
     display: grid;
-    justify-content: center;
+    justify-content: space-between;
     align-self: start;
+    grid-auto-flow: column;
 }
 
 #button-container > button {
@@ -69,7 +75,16 @@ body {
 }
 
 #button-container > button:hover {
-    background-color: rgb(17, 119, 187)
+    background-color: rgb(17, 119, 187);
+    cursor: pointer;
+}
+
+#button-container > #clear-button {
+    background-color: #c23533;
+}
+
+#button-container > #clear-button:hover {
+    background-color: #e24e4c;
 }
 
 #turn-indicator {

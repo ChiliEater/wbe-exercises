@@ -1,11 +1,11 @@
 'use strict'
+import { BoardBuilder } from './boardBuilder.js'
 import * as main from './main.js'
-import * as renderer from './renderer.js'
 
 /**
  * This class represents all relevant information that encompasses a chip in the board
  */
-class Chip {
+export class Chip {
     /**
      * @type {string}
      */
@@ -20,11 +20,6 @@ class Chip {
      * @type {number}
      */
     #column
-
-    /**
-     * @type {HTMLElement}
-     */
-    #element
 
     constructor(color, row, column) {
         this.#color = color
@@ -60,6 +55,24 @@ class Chip {
         return this.color === chip.color
     }
 
+    clone() {
+        return new Chip(this.#color, this.#row, this.#column)
+    }
+
+    freeze() {
+        return {
+            color: this.#color,
+            row: this.#row,
+            column: this.#column
+        }
+    }
+
+    revive(obj) {
+        this.#color = obj.color
+        this.#row = obj.row
+        this.#column = obj.column
+    }
+
     get color() {
         return this.#color
     }
@@ -73,26 +86,33 @@ class Chip {
     }
 }
 
-class Board {
+export class Game {
     #turn = 0
+    /**
+     * @type {Board}
+     */
     #board
     #won = false
+    /**
+     * @type {renderer}
+     */
+    #renderer
 
-    constructor() {}
+    constructor(renderer) {
+        this.#renderer = renderer
+        this.reset()
+    }
 
     /**
      * Resets the board to a neutral state
      */
     reset() {
-        board = Array(main.config.rows)
-        for (let i = 0; i < board.length; i++) {
-            board[i] = Array(main.config.columns)
-        }
+        this.#board = new BoardBuilder().fromSize(main.config.columns, main.config.rows)
 
-        turn = 0
-        won = false
-        renderer.unannounceWinner()
-        renderer.draw(Array.from(board))
+        this.#turn = 0
+        this.#won = false
+        this.#renderer.unannounceWinner()
+        this.#renderer.draw(this.#board.board, this.getColor())
     }
 
     /**
@@ -100,23 +120,23 @@ class Board {
      * @param {Number} column The column
      */
     insertAt(column) {
-        let row = findFreeRow(column)
+        let row = this.#board.findFreeRow(column)
 
-        if (row >= main.config.rows || row < 0 || won) {
+        if (row >= main.config.rows || row < 0 || this.#won) {
             return
         }
 
-        let chip = new Chip(getColor(), row, column)
-        board[row][column] = chip
+        let chip = new Chip(this.getColor(), row, column)
+        this.#board.setChip(chip, column, row)
 
-        turn++
-        renderer.draw(Array.from(board))
+        this.#turn++
+        this.#renderer.draw(this.#board.board, this.getColor())
 
-        if (checkWinner(chip)) {
-            won = true
-            turn++
-            renderer.draw(Array.from(board))
-            renderer.announceWinner(chip.color)
+        if (this.#board.checkWinner(chip)) {
+            this.#won = true
+            this.#turn++
+            this.#renderer.draw(this.#board.board, this.getColor())
+            this.#renderer.announceWinner(chip.color)
         }
     }
 
@@ -125,225 +145,14 @@ class Board {
      * @returns A color
      */
     getColor() {
-        return turn % 2 == 0 ? main.config.red : main.config.blue
+        return this.#turn % 2 == 0 ? main.config.red : main.config.blue
     }
 
-    /**
-     * Searches the given column and returns the first empty row from the bottom
-     * @param {Number} column The column that should be searched
-     * @returns The empty row
-     */
-    #findFreeRow(column) {
-        for (let i = main.config.rows - 1; i > -1; i--) {
-            if (board[i][column] === undefined) {
-                return i
-            }
-        }
-        return -1
-    }
-
-    /**
-     * Takes a chip and checks the board for win conditions
-     * @param {Chip} chip The chip to compare to
-     * @returns Whether the player of the given chip won
-     */
-    #checkWinner(chip) {
-        let winner = false
-
-        for (let y = 0; y < board.length; y++) {
-            const row = board[y]
-            for (let x = 0; x < row.length; x++) {
-                const slot = row[x]
-                if (chip.sameTeam(slot)) {
-                    winner =
-                        checkDirection(chip, y, x, 1, 0) ||
-                        checkDirection(chip, y, x, -1, 0) ||
-                        checkDirection(chip, y, x, 0, 1) ||
-                        checkDirection(chip, y, x, 0, -1) ||
-                        checkDirection(chip, y, x, 1, 1) ||
-                        checkDirection(chip, y, x, -1, -1) ||
-                        checkDirection(chip, y, x, -1, 1) ||
-                        checkDirection(chip, y, x, 1, -1)
-                    if (winner) {
-                        return winner
-                    }
-                }
-            }
-        }
-        return false
-    }
-
-    /**
-     * Checks if the a color has won in the given direction from the specified starting point
-     * @param {Chip} check The chip to compare with
-     * @param {number} row Row
-     * @param {number} column Column
-     * @param {number} rowDelta Row direction
-     * @param {number} columnDelta Column direction
-     * @returns If the color has won in this direction
-     */
-    #checkDirection(check, row, column, rowDelta, columnDelta) {
-        const chip = check
-        let match = false
-        let matches = 0
-
-        while (
-            row < main.config.rows &&
-            row >= 0 &&
-            column < main.config.columns &&
-            column >= 0
-        ) {
-            let test = board[row][column]
-            if (!chip.sameTeam(test) && match) {
-                break
-            } else if (chip.sameTeam(test)) {
-                match = true
-                matches++
-            }
-            row += rowDelta
-            column += columnDelta
-        }
-        return matches === 4
-    }
-}
-
-/**
- * The current turn
- */
-export let turn = 0
-
-/**
- * @type {Array}
- */
-let board
-
-/**
- * The current win state
- */
-let won = false
-
-/**
- * Resets the board to a neutral state
- */
-export function reset() {
-    board = Array(main.config.rows)
-    for (let i = 0; i < board.length; i++) {
-        board[i] = Array(main.config.columns)
-    }
-
-    turn = 0
-    won = false
-    renderer.unannounceWinner()
-    renderer.draw(Array.from(board))
-}
-
-/**
- * Inserts the current puck at the given column and prepares the next turn
- * @param {Number} column The column
- */
-export function insertAt(column) {
-    let row = findFreeRow(column)
-
-    if (row >= main.config.rows || row < 0 || won) {
-        return
-    }
-
-    let chip = new Chip(getColor(), row, column)
-    board[row][column] = chip
-
-    turn++
-    renderer.draw(Array.from(board))
-
-    if (checkWinner(chip)) {
-        won = true
-        turn++
-        renderer.draw(Array.from(board))
-        renderer.announceWinner(chip.color)
-    }
-}
-
-/**
- * Returns the correct color based on the current turn
- * @returns A color
- */
-export function getColor() {
-    return turn % 2 == 0 ? main.config.red : main.config.blue
-}
-
-/**
- * Searches the given column and returns the first empty row from the bottom
- * @param {Number} column The column that should be searched
- * @returns The empty row
- */
-function findFreeRow(column) {
-    for (let i = main.config.rows - 1; i > -1; i--) {
-        if (board[i][column] === undefined) {
-            return i
+    freeze() {
+        return {
+            turn: this.#turn,
+            won: this.#won,
+            board: this.#board.freeze()
         }
     }
-    return -1
-}
-
-/**
- * Takes a chip and checks the board for win conditions
- * @param {Chip} chip The chip to compare to
- * @returns Whether the player of the given chip won
- */
-function checkWinner(chip) {
-    let winner = false
-
-    for (let y = 0; y < board.length; y++) {
-        const row = board[y]
-        for (let x = 0; x < row.length; x++) {
-            const slot = row[x]
-            if (chip.sameTeam(slot)) {
-                winner =
-                    checkDirection(chip, y, x, 1, 0) ||
-                    checkDirection(chip, y, x, -1, 0) ||
-                    checkDirection(chip, y, x, 0, 1) ||
-                    checkDirection(chip, y, x, 0, -1) ||
-                    checkDirection(chip, y, x, 1, 1) ||
-                    checkDirection(chip, y, x, -1, -1) ||
-                    checkDirection(chip, y, x, -1, 1) ||
-                    checkDirection(chip, y, x, 1, -1)
-                if (winner) {
-                    return winner
-                }
-            }
-        }
-    }
-    return false
-}
-
-/**
- * Checks if the a color has won in the given direction from the specified starting point
- * @param {Chip} check The chip to compare with
- * @param {number} row Row
- * @param {number} column Column
- * @param {number} rowDelta Row direction
- * @param {number} columnDelta Column direction
- * @returns If the color has won in this direction
- */
-function checkDirection(check, row, column, rowDelta, columnDelta) {
-    const chip = check
-    let match = false
-    let matches = 0
-
-    while (
-        row < main.config.rows &&
-        row >= 0 &&
-        column < main.config.columns &&
-        column >= 0
-    ) {
-        let test = board[row][column]
-        if (!chip.sameTeam(test) && match) {
-            break
-        } else if (chip.sameTeam(test)) {
-            match = true
-            matches++
-        }
-        row += rowDelta
-        column += columnDelta
-    }
-    return matches === 4
 }
