@@ -40,7 +40,7 @@ function setupButtonEvents() {
 
     UNDO_BTN.addEventListener("pointerup", (event) => {
         event.preventDefault()
-
+        model.undo()
     })
 
     SAVE_BTN.addEventListener("pointerup", (event) => {

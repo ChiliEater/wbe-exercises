@@ -59,7 +59,7 @@ export class Chip {
         return new Chip(this.#color, this.#row, this.#column)
     }
 
-    freeze() {
+    toJSON() {
         return {
             color: this.#color,
             row: this.#row,
@@ -67,10 +67,11 @@ export class Chip {
         }
     }
 
-    revive(obj) {
+    fromObject(obj) {
         this.#color = obj.color
         this.#row = obj.row
         this.#column = obj.column
+        return this
     }
 
     get color() {
@@ -98,6 +99,8 @@ export class Game {
      */
     #renderer
 
+    #undoStack = []
+
     constructor(renderer) {
         this.#renderer = renderer
         this.reset()
@@ -108,9 +111,9 @@ export class Game {
      */
     reset() {
         this.#board = new BoardBuilder().fromSize(main.config.columns, main.config.rows)
-
         this.#turn = 0
         this.#won = false
+        this.#undoStack = []
         this.#renderer.unannounceWinner()
         this.#renderer.draw(this.#board.board, this.getColor())
     }
@@ -126,8 +129,11 @@ export class Game {
             return
         }
 
+        this.#do()
+
         let chip = new Chip(this.getColor(), row, column)
         this.#board.setChip(chip, column, row)
+
 
         this.#turn++
         this.#renderer.draw(this.#board.board, this.getColor())
@@ -137,6 +143,7 @@ export class Game {
             this.#turn++
             this.#renderer.draw(this.#board.board, this.getColor())
             this.#renderer.announceWinner(chip.color)
+            this.#turn--
         }
     }
 
@@ -148,11 +155,34 @@ export class Game {
         return this.#turn % 2 == 0 ? main.config.red : main.config.blue
     }
 
-    freeze() {
+    #do() {
+        this.#undoStack.push(new BoardBuilder().fromBoard(this.#board))
+    }
+
+    undo() {
+        if (this.#undoStack.length > 0) {
+            this.#board = this.#undoStack.pop()
+            this.#turn--
+            this.#won = false
+            this.#renderer.unannounceWinner()
+            this.#renderer.draw(this.#board.board, this.getColor())
+        }
+    }
+
+    toJSON() {
         return {
             turn: this.#turn,
             won: this.#won,
-            board: this.#board.freeze()
+            board: this.#board.freeze(),
+            undoStack: this.#undoStack
         }
+    }
+
+    fromObject(obj) {
+        this.#turn = obj.turn
+        this.#won = obj.won
+        let builder = new BoardBuilder()
+        this.#board = builder.fromObject(obj)
+        this.#undoStack = obj.undoStack.map(state => builder.fromObject(state))
     }
 }

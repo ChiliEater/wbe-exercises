@@ -20,8 +20,16 @@ export class BoardBuilder {
      */
     fromArray(board) {
         let newBoard = new Board(board[0].length, board.length)
-        board.flatMap(slot => slot).filter(slot => !!slot).forEach(chip => newBoard.setChip(chip.clone(), chip.row, chip.column))
+        board.flat().filter(slot => !!slot).forEach(chip => newBoard.setChip(chip.clone(), chip.column, chip.row))
         return newBoard
+    }
+
+    fromBoard(board) {
+        return this.fromArray(board.board)
+    }
+
+    fromObject(obj) {
+        return this.empty().fromObject(obj)
     }
 }
 
@@ -34,9 +42,9 @@ class Board {
         this.#height = height
         this.#width = width
 
-        this.#board = Array(height)
-        for (let i = 0; i < width; i++) {
-            this.#board[i] = Array(width)
+        this.#board = []
+        for (let i = 0; i < width - 1; i++) {
+            this.#board.push(Array(width))
         }
     }
 
@@ -142,31 +150,22 @@ class Board {
         return matches === 4
     }
 
-    freeze() {
-        let board = new Board(this.#width, this.#width)
-        this.#board.flatMap(slot => slot).filter(slot => !!slot).forEach(chip => board.setChip(chip.freeze(), chip.column, chip.row))
+    toJSON() {
         return {
-            board: board,
+            board: this.#board,
             width: this.#width,
             height: this.#height
         }
     }
 
-    revive(obj) {
+    fromObject(obj) {
         this.#width = obj.width
         this.#height = obj.height
         let newBoard = obj.board
-        for (let y = 0; y < newBoard.length; y++) {
-            const row = newBoard[y];
-            for (let x = 0; x < row.length; x++) {
-                const slot = row[x];
-                if (!slot) {
-                    continue
-                }
-                let chip = new Chip()
-                chip.revive(row[x])
-                newBoard[y][x] = chip
-            }
-        }
+        obj.board.flat().filter(slot => !!slot).forEach(chip => {
+            let newChip = new Chip().fromObject(chip)
+            newBoard[newChip.row][newChip.column] = newChip
+        })
+        return this
     }
 }
